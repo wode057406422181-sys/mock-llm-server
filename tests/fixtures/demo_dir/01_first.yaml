@@ -1,0 +1,8 @@
+# 这是一个基本的回放测试剧本。
+# 场景：第一轮回合，Agent 收到了用户输入，假装只用文本回复。
+
+kind: Response
+description: "Initial turn where the agent just replies with a simple text greeting."
+blocks:
+  - type: Text
+    text: "First turn response"

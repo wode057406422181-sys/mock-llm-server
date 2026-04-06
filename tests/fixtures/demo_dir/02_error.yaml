@@ -1,0 +1,7 @@
+# 这是一个异常注入测试。
+# 场景：第二轮回合，模拟网络突然出现故障或者限流拦截。
+
+kind: Error
+description: "Second turn where we deliberately inject an HTTP 500 error to test KeZen's retry/fallback logic."
+status: 500
+message: "Something went wrong manually"

@@ -1,0 +1,34 @@
+# 这是一个展示“先回复文本，然后发起 Tool Call，最后再模拟一个 400 失败”的复合场景。
+# 通常你可以通过编写 description 来给读者留下关于上下文的提示。
+
+- kind: Response
+  description: "Mock response simulating the assistant's initial greeting."
+  request_payload:
+    messages:
+      - role: user
+        content: "Hi, can you search for error.log?"
+  blocks:
+    - type: Text
+      text: |
+        This is a large text response!
+        Second line.
+
+- kind: Response
+  description: "Mock response simulating the assistant deciding to use a Bash tool."
+  request_payload:
+    messages:
+      - role: user
+        content: "Hi, can you search for error.log?"
+      - role: assistant
+        content: "This is a large text response!\nSecond line."
+  blocks:
+    - type: ToolCall
+      id: call_2
+      name: Bash
+      input:
+        command: "ls -la"
+
+- kind: Error
+  description: "Mock response simulating what happens if the API randomly crashes."
+  status: 400
+  message: "Bad request syntax"
