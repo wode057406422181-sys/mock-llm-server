@@ -125,7 +125,11 @@ async fn handle_anthropic(
     match entry {
         MockScriptEntry::Response { response: resp, .. } => {
             let events = anthropic_sse::generate_events(resp);
-            let stream = stream::iter(events).map(Ok::<_, Infallible>);
+            let stream = stream::iter(events).then(|event| async move {
+                // ADDED: simulate real typing delay! 
+                tokio::time::sleep(std::time::Duration::from_millis(15)).await;
+                Ok::<_, Infallible>(event)
+            });
             Ok(Sse::new(stream).into_response())
         }
         MockScriptEntry::Error {
@@ -152,7 +156,11 @@ async fn handle_openai(
     match entry {
         MockScriptEntry::Response { response: resp, .. } => {
             let events = openai_sse::generate_events(resp);
-            let stream = stream::iter(events).map(Ok::<_, Infallible>);
+            let stream = stream::iter(events).then(|event| async move {
+                // ADDED: simulate real typing delay! 
+                tokio::time::sleep(std::time::Duration::from_millis(15)).await;
+                Ok::<_, Infallible>(event)
+            });
             Ok(Sse::new(stream).into_response())
         }
         MockScriptEntry::Error {

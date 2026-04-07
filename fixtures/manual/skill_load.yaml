@@ -1,0 +1,14 @@
+- kind: Response
+  description: "Response triggering skill load"
+  blocks:
+    - type: ToolCall
+      id: "call_skill_1"
+      name: "Skill"
+      input:
+        skill: "test-skill"
+        context: "test"
+- kind: Response
+  description: "Response after skill loads"
+  blocks:
+    - type: Text
+      text: "Skill is loaded."

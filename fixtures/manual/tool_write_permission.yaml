@@ -1,0 +1,14 @@
+- kind: Response
+  description: "Simulate a FileWrite tool call to trigger permissions"
+  blocks:
+    - type: ToolCall
+      id: "call_write_1"
+      name: "FileWrite"
+      input:
+        path: "/tmp/fake_e2e_test_file.txt"
+        content: "hello"
+- kind: Response
+  description: "Result"
+  blocks:
+    - type: Text
+      text: "Wrote it."

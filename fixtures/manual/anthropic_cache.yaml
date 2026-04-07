@@ -1,0 +1,10 @@
+- kind: Response
+  description: "Response with cache usage reporting"
+  blocks:
+    - type: Text
+      text: "I used caching."
+  usage:
+    input_tokens: 15
+    output_tokens: 5
+    cache_creation_input_tokens: 50
+    cache_read_input_tokens: 100

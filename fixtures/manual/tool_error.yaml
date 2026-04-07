@@ -1,0 +1,13 @@
+- kind: Response
+  description: "Simulate a tool error by requesting a non-existent file"
+  blocks:
+    - type: ToolCall
+      id: "call_read_err_1"
+      name: "FileRead"
+      input:
+        path: "/tmp/THIS_FILE_DOES_NOT_EXIST_9999.txt"
+- kind: Response
+  description: "Result"
+  blocks:
+    - type: Text
+      text: "Got an error."

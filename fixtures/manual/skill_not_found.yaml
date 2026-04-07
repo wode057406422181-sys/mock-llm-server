@@ -1,0 +1,14 @@
+- kind: Response
+  description: "Response triggering non-existent skill"
+  blocks:
+    - type: ToolCall
+      id: "call_skill_err"
+      name: "Skill"
+      input:
+        skill: "unknown-skill"
+        context: "test"
+- kind: Response
+  description: "Response after error"
+  blocks:
+    - type: Text
+      text: "Failed."
