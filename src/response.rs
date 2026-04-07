@@ -40,6 +40,10 @@ pub struct MockErrorResponse {
 pub struct MockUsage {
     pub input_tokens: u64,
     pub output_tokens: u64,
+    #[serde(default)]
+    pub cache_creation_input_tokens: u64,
+    #[serde(default)]
+    pub cache_read_input_tokens: u64,
 }
 
 /// Entry in the script queue: normal response or error
@@ -90,6 +94,7 @@ impl MockResponse {
                 usage: Some(MockUsage {
                     input_tokens,
                     output_tokens,
+                    ..Default::default()
                 }),
             },
             request_payload: None,

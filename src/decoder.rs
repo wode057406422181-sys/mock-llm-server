@@ -57,6 +57,7 @@ pub async fn process_and_save(
     let mut current_thinking = String::new();
     let mut tool_calls: HashMap<usize, ToolCallAccumulator> = HashMap::new();
     let mut ordered_blocks: Vec<MockResponseBlock> = Vec::new();
+    let mut current_usage = crate::response::MockUsage::default();
 
     let flush_content = |text: &mut String, thinking: &mut String, blocks: &mut Vec<MockResponseBlock>| {
         if !text.is_empty() {
@@ -117,6 +118,19 @@ pub async fn process_and_save(
                             }
                         }
                     }
+
+                    // Parse usage if present
+                    if let Some(u) = v.get("usage") {
+                        if let Some(pt) = u["prompt_tokens"].as_u64() {
+                            current_usage.input_tokens = pt;
+                        }
+                        if let Some(ct) = u["completion_tokens"].as_u64() {
+                            current_usage.output_tokens = ct;
+                        }
+                        if let Some(cached) = u.pointer("/prompt_tokens_details/cached_tokens").and_then(|t| t.as_u64()) {
+                            current_usage.cache_read_input_tokens = cached;
+                        }
+                    }
                 }
             }
         }
@@ -160,6 +174,26 @@ pub async fn process_and_save(
                                 }
                             }
                         }
+                        "message_start" => {
+                            if let Some(u) = v.pointer("/message/usage") {
+                                if let Some(it) = u["input_tokens"].as_u64() {
+                                    current_usage.input_tokens = it;
+                                }
+                                if let Some(ct) = u["cache_creation_input_tokens"].as_u64() {
+                                    current_usage.cache_creation_input_tokens = ct;
+                                }
+                                if let Some(rt) = u["cache_read_input_tokens"].as_u64() {
+                                    current_usage.cache_read_input_tokens = rt;
+                                }
+                            }
+                        }
+                        "message_delta" => {
+                            if let Some(u) = v.get("usage") {
+                                if let Some(ot) = u["output_tokens"].as_u64() {
+                                    current_usage.output_tokens = ot;
+                                }
+                            }
+                        }
                         _ => {}
                     }
                 }
@@ -186,7 +220,7 @@ pub async fn process_and_save(
 
     let response = MockResponse {
         blocks: ordered_blocks,
-        usage: None,
+        usage: Some(current_usage),
     };
 
     let entry = MockScriptEntry::Response {

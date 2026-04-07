@@ -1,0 +1,15 @@
+- kind: Response
+  description: "Response 1"
+  blocks:
+    - type: Text
+      text: "Response 1"
+- kind: Response
+  description: "Response 2"
+  blocks:
+    - type: Text
+      text: "Response 2"
+- kind: Response
+  description: "Summary response for compact"
+  blocks:
+    - type: Text
+      text: "This is the summary."
